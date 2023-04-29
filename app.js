@@ -71,14 +71,22 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: "steak",
+    category: "dinner",
+    price: 35.0,
+    img: "./images/item-10.jpeg",
+    desc: `Steak for dinner`,
+  },
 ];
 
 const sectionCenter = document.querySelector(".section-center");
-const filterButtons = document.querySelectorAll(".filter-btn");
+const btnContainer = document.querySelector(".btn-container");
 
 window.addEventListener("DOMContentLoaded", function () {
   displayMenuItems(menu);
-  listenButtons();
+  displayMenuButtons();
 });
 
 /* Muestra los elementos del menu */
@@ -102,10 +110,34 @@ function displayMenuItems(menu) {
 }
 
 /* Se filtra el menú según el botón que se oprimió */
-function listenButtons() {
+function displayMenuButtons() {
+  //Obtengo dinamicamente las categorias del menu
+  const categoriesArray = menu.reduce(
+    function (values, item) {
+      if (!values.includes(item.category)) {
+        values.push(item.category);
+      }
+      return values;
+    },
+    ["all"]
+  ); //All se agrega al inicio del arreglo manualmente
+
+  //Creación de los botones según las categorias
+  const buttonsMenu = categoriesArray
+    .map(function (categories) {
+      return `<button class="filter-btn" type="button" data-id="${categories}">${categories}</button>`;
+    })
+    .join("");
+
+  btnContainer.innerHTML = buttonsMenu;
+
+  //Filtrado
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
   filterButtons.forEach(function (filterBtn) {
     filterBtn.addEventListener("click", function (e) {
       const category = e.currentTarget.dataset.id;
+      console.log(category);
       const filteredMenu = menu.filter(function (items) {
         if (category == "all") {
           return items;
@@ -117,20 +149,3 @@ function listenButtons() {
     });
   });
 }
-
-// function displayMenuItems(menuItems) {
-//   menuItems.forEach(function (item) {
-//     sectionCenter.innerHTML += `<article class="menu-item">
-//         <img src="${item.img}" class="photo" alt="${item.title}">
-//         <div class="item-info">
-//           <header>
-//             <h4>${item.title}</h4>
-//             <h4 class="price">$${item.price}</h4>
-//           </header>
-//           <p class="item-text">
-//             ${item.desc}
-//           </p>
-//         </div>
-//       </article>`;
-//   });
-// }
